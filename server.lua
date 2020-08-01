@@ -1,13 +1,18 @@
 RegisterCommand('rename',function(source,args,rawCommand)
     local user_id = vRP.getUserId(source)
-    if vRP.hasGroup(user_id, "group") then
+    if vRP.hasPermission(user_id, "chat.permissao") or vRP.hasPermission(user_id, "admin.permissao") or vRP.hasPermission(user_id, "mindmaster.permissao") then
         local idjogador = vRP.prompt(source, "Qual id do jogador?", "")
         local nome = vRP.prompt(source, "Novo nome", "")
         local firstname = vRP.prompt(source, "Novo sobrenome", "")
         local idade = vRP.prompt(source, "Nova idade", "")
-
-        if idjogador and nome and firstname and idade then
-            TriggerEvent('b2k-character:updateName',idjogador,nome,firstname,idade)
-        end
+        local identity = vRP.getUserIdentity(parseInt(user_id))
+        vRP.execute("vRP/update_user_identity",{
+            user_id = idjogador,
+            firstname = firstname,
+            name = nome,
+            age = idade,
+            registration = identity.registration,
+            phone = identity.phone
+        })
     end
 end)
